@@ -55,27 +55,16 @@ const Routines = ({currentUser, userRoutines}) => {
                     <Modal.Title>New Routine</Modal.Title>
                   </Modal.Header>
                   <form onSubmit={handleSubmit}>
-                  <Modal.Body>
                   
+                  <Modal.Body>
                       <Form.Group controlId="formBasicEmail">
                         <Form.Control type="text" name="name" placeholder="Enter routine name" onChange={handleChange} />
                       </Form.Group>
                       <Form.Group controlId="formBasicPassword">
                         <Form.Control type="text" name="goal" placeholder="Enter routine goal" onChange={handleChange} />
-                      </Form.Group>
-                      <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="Routine Public" />
-                      </Form.Group>
-                      {/* <Button variant="primary" type="submit">
-                        Submit
-                      </Button> */}
-                   
-                            {/* <Form.Control type="text" name="name" placeholder="Enter routine name" onChange={handleChange}/>
-                            <br/>
-                            <Form.Control type="text" name="goal" placeholder="Enter routine goal" onChange={handleChange}/> */}
-                       
-                  </Modal.Body>
-                  
+                      </Form.Group>                       
+                  </Modal.Body>  
+
                   <Modal.Footer>
                      <Button variant="secondary" type="submit" onClick={() =>{setFormButton('close');handleClose()}}>
                       Close
