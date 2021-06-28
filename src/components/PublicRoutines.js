@@ -8,12 +8,20 @@ const PublicRoutines = ({currentUser, routines}) => {
             <p>There is a total of {routines.length} public routines.</p>
 
             {
-                routines.map(({id, name, goal, creatorName}) =>(
+                routines.map(({id, name, goal, creatorName, activities}) =>(
                 <div key={id} className="post">
                     <h3>Routine Name: {name}</h3>
                     <p>Routine Goal: {goal}</p>
                     <p>Creator Name: {creatorName}</p>
-                    {/* <p>Activities: {activities}</p> */}
+                    
+                    {activities.map(({id, name, description, duration, count})=> (
+                        <div key={id} className="activities">
+                            <h3>Routine Activity: {name}</h3>
+                            <p>Activity Description: {description}</p>
+                            <p>Duration: {duration}</p>
+                            <p>Count: {count}</p>
+                        </div>
+                    ))}
                 </div>  
                 ))}
         </div>

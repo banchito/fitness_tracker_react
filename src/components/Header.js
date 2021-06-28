@@ -8,17 +8,41 @@ const Header = ({currentUser, setCurrentUser}) => {
     
     const [username, setUsername]  = useState('');
     const [password, setPassword]  = useState('');
-    const [apiMessage, setApiMessage] = useState('')
-    // console.log(apiMessage);
+    const [apiMessage, setApiMessage] = useState('');
+    const [formButton, setFormButton] = useState();
 
     const handleSubmit = async(event) =>{
-     
+        
         event.preventDefault();
-        const result = await loginUser(username, password)
-        console.log(result)
+        
+        
+        if(formButton === 'logout') return handleUserLogout()
+        if (formButton === "login" ){
+            
+            const result = await loginUser(username, password)
+            hanldeLoginAndRegister(result)  
+        }
+        if (formButton === "register" ){
+           try{
+                const result = await registerUser(username, password)
+                hanldeLoginAndRegister(result)  
+           }catch(error){
+             console.log(error);
+           }   
+        }
+    }
+
+    const handleUserLogout = () => {
+        clearCurrentUser();
+        setCurrentUser(null);
+    }
+
+    const hanldeLoginAndRegister = (result) => {
         setApiMessage(result.message);
-        storeCurrentUser(result.user);  
+        storeCurrentUser(result.user); 
         setCurrentUser(result.user);
+        setUsername('')
+        setPassword('')
     }
 
 return (
@@ -33,12 +57,14 @@ return (
                 <NavLink to="/myroutines" activeClassName="current">My Routines</NavLink>
                 <NavLink to="/publicroutines" activeClassName="current">Public Routines</NavLink>
                 <NavLink to="/activities" activeClassName="current">Activities</NavLink>
+                <button name="logout" type="submit" value="logout" onClick={ () =>{setFormButton('logout')} }>LOG OUT, { currentUser.username }</button>
               </>
             : <>
                 <input placeholder="username" value={username} onChange={(e)=>{setUsername(e.target.value)}}></input>
-                <input placeholder="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}></input>
-                <button>REGISTER</button>
-                <button>LOG IN</button>
+                <br/>
+                <input placeholder="password" type="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}></input>
+                <button name="register" type="submit" value="register" onClick={() =>{setFormButton('register')}}>REGISTER</button>
+                <button name="login" type="submit" value="login" onClick={() =>{setFormButton('login')}}>LOG IN</button>
              </>        
             }
         </form>

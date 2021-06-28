@@ -16,3 +16,16 @@
   max-width: 40em;
   border: solid black 1px;
 }
+
+.newRoutineButton{
+  margin: .5em;
+}
+a{
+  padding: 2px 4px;
+  color: #333333;
+  font-weight: bold;
+  font-size: 1em;
+  color: #8ff;
+  background: #333333;
+  margin-right: .5em;
+}

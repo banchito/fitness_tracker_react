@@ -1,20 +1,21 @@
 import { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
-import { Header, Routines, Activities, PublicRoutines } from "./components";
-import {getCurrentUser} from './auth';
+import { Header, Routines, Activities, PublicRoutines, CreateForm } from "./components";
+import {getCurrentUser} from './auth';//
 import {getPublicRoutinesByUserFrontEnd, fetchActivitiesFrontEnd, getAllPublicRoutinesFrontEnd} from './api'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
 const App = () => {
 
-    const [currentUser, setCurrentUser] = useState(getCurrentUser());
+    const [currentUser, setCurrentUser] = useState("");
     const [userRoutines, setUserRoutines] = useState([]);
     const [routines, setRoutines] = useState([]);
     const [activities, setActivities]= useState([]);
 
-    console.log("currentUser", currentUser);
+    
 
     useEffect(()=> {
         if(!currentUser) {setUserRoutines([]); setRoutines([]); setActivities([]); return;}
@@ -72,7 +73,7 @@ const App = () => {
                 </> : <>
                     <Switch>
                         <Route exact path="/">
-                        <h2 style={{ padding: ".5em" }}>Please log in, above.</h2>
+                        <h2 style={{ padding: ".5em" }}>Please register or log in, above.</h2>
                         </Route>
                         <Redirect to="/" />
                     </Switch>

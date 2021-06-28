@@ -40,7 +40,7 @@ export const loginUser = async (username, password) => {
         });
         const data = await response.json();
 
-        localStorage.setItem("token", JSON.stringify(data.token));
+        localStorage.setItem('token', JSON.stringify(data.token));
         return data
     }catch(error){
         throw error
@@ -177,10 +177,11 @@ export const getAllPublicRoutinesFrontEnd = async () => {
 }
 
 // POST /api/routines
-export const createRoutineFrontEnd = async(name, goal, isPublic) => {
+export const createRoutineFrontEnd = async({name, goal, isPublic}) => {
     try{
-        const token = localStorage.getItem("token");
-        if(!token) return
+        const token = JSON.parse(localStorage.getItem("token"));
+        console.log("token:", token)
+        // if(!token) return
         const response = await fetch(`${BASE_URL}/routines`, {
                 method: "POST",
                 headers: {
