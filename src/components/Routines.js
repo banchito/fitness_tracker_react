@@ -52,7 +52,7 @@ const Routines = ({currentUser, userRoutines, setUserRoutines}) => {
         }
 
         if(formButton === 'update'){
-           
+           // NOT WORKING
             try{
                 const result = await updateRoutineFrontEnd(routineUpdateDelete)
                 resetNewRoutine()
@@ -77,7 +77,7 @@ const Routines = ({currentUser, userRoutines, setUserRoutines}) => {
     }
 
     const deleteRoutine =async(routineId)=> {
-       
+        //NOT WORKING
         try{
             const result = await deleteRoutineFrontEnd(routineId)
         }catch(error){
