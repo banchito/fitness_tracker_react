@@ -14,15 +14,16 @@ const App = () => {
     const [userRoutines, setUserRoutines] = useState([]);
     const [routines, setRoutines] = useState([]);
     const [activities, setActivities]= useState([]);
-
+    const [apiMessage, setApiMessage] = useState('');
+    
     
 
     useEffect(()=> {
         if(!currentUser) {setUserRoutines([]); setRoutines([]); setActivities([]); return;}
+        
 
         getPublicRoutinesByUserFrontEnd(currentUser.username)
             .then((routines)=>{
-                console.log("routines:", routines);
                 setUserRoutines(routines)
             })
             .catch((error) => {
@@ -31,7 +32,6 @@ const App = () => {
         
         fetchActivitiesFrontEnd()
             .then((activities)=>{
-              console.log("activities:", activities);
               setActivities(activities) 
             })
             .catch((error) => {
@@ -40,7 +40,6 @@ const App = () => {
         
         getAllPublicRoutinesFrontEnd()
             .then((publicRoutines)=>{
-                console.log("publicRoutines:", publicRoutines);
                 setRoutines(publicRoutines) 
             })
             .catch((error) => {
@@ -52,12 +51,12 @@ const App = () => {
     return(
         <Router> 
             <div id="App">
-                <Header currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+                <Header currentUser={currentUser} setCurrentUser={setCurrentUser} setApiMessage={setApiMessage} />
                 {
                     currentUser ? <>
                         <Switch>
                             <Route path="/myroutines">
-                                <Routines currentUser={currentUser} userRoutines={userRoutines}/>
+                                <Routines currentUser={currentUser} userRoutines={userRoutines} setUserRoutines={setUserRoutines}/>
                             </Route>
                             <Route path="/publicroutines">
                                 <PublicRoutines currentUser={currentUser} routines={routines}/>
@@ -66,7 +65,8 @@ const App = () => {
                                 <Activities currentUser={currentUser} activities={activities}  />
                             </Route>
                             <Route exact path="/">
-                                <h2 style={{padding: ".5em"}}>Welcome, { currentUser.username }!</h2>
+                                <h2 style={{padding: ".5em"}}>Welcome, {currentUser.username }</h2>
+                              
                              </Route>
                                 <Redirect to="/" />
                         </Switch>

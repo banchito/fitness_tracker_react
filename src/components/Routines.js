@@ -1,22 +1,25 @@
 import React, {useState} from "react";
-import Modal from 'react-bootstrap/Modal';
+import ModalF from './Modal';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import {createRoutineFrontEnd} from '../api';
+import {createRoutineFrontEnd, deleteRoutineFrontEnd, updateRoutineFrontEnd} from '../api';
 
 import "./Routines.css";
 
-const Routines = ({currentUser, userRoutines}) => {
+const Routines = ({currentUser, userRoutines, setUserRoutines}) => {
+
+    let initialState = {routineID:"", name:"", goal:"", isPublic:true};
+   
 
     const [show, setShow] = useState(false);
-    const [newRoutine, setNewRoutine] = useState({name:"", goal:"", isPublic:true})
-    const [formButton, setFormButton] = useState();
-    console.log(formButton)
-
-    console.log(newRoutine)
-
-    const handleClose = () => {setShow(false);}
+    const [newRoutine, setNewRoutine] = useState({routineID:"", name:"", goal:"", isPublic:true})
+    const [routineUpdateDelete, setroutineUpdateDelete] = useState({routineID:"", name:"", goal:"", isPublic:true})
+    const [formButton, setFormButton] = useState("");
+    
+    
+                
+    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
 
     const handleChange = (event) => {
 
@@ -31,13 +34,29 @@ const Routines = ({currentUser, userRoutines}) => {
 
     const handleSubmit = async(event) => {
         event.preventDefault()
-        if(formButton === 'openModal') { 
-            setNewRoutine({name:"", goal:"", isPublic:true})
-            console.log(newRoutine)
+        if(formButton === 'openModal'||formButton === 'close') { 
+            resetNewRoutine()
+            setFormButton("")
         };
+
         if(formButton === 'create'){
+            if(!newRoutine.name || !newRoutine.goal ) return 
+                
             try{
                 const result = await createRoutineFrontEnd(newRoutine)
+                resetNewRoutine()
+                setFormButton("")
+            }catch(error){
+                console.log(error);
+            }
+        }
+
+        if(formButton === 'update'){
+           
+            try{
+                const result = await updateRoutineFrontEnd(routineUpdateDelete)
+                resetNewRoutine()
+                setFormButton("")
             }catch(error){
                 console.log(error);
             }
@@ -45,45 +64,47 @@ const Routines = ({currentUser, userRoutines}) => {
         
     }
 
+    const findRoutineCrud = (routineId) =>{
+        const [routineCrud] = userRoutines.map(routine=>{
+            if(routineId === routine.id) {
+                return (routine)
+            }
+        })
+        const {id, name, goal, isPublic} = routineCrud
+        setroutineUpdateDelete({id, name, goal, isPublic})
+        formButton === 'delete' && deleteRoutine(id) 
+        
+    }
+
+    const deleteRoutine =async(routineId)=> {
+       
+        try{
+            const result = await deleteRoutineFrontEnd(routineId)
+        }catch(error){
+            console.log(error);
+            
+        }
+        
+    }
+
+    const resetNewRoutine = () => {
+        setNewRoutine(initialState)
+    }
+
     return( 
         <div className="routines">
-            <h2>Hi {currentUser.username}, Here are your Routines &nbsp;|&nbsp; <Button variant="primary" onClick={() =>{setFormButton('openModal');handleShow()}}>Create Routine</Button></h2>
+            <h2>Hi {currentUser.username}, Here are your Routines &nbsp;|&nbsp; <Button variant="primary" onClick={() =>{setFormButton('create'); handleShow()}}>Create Routine</Button></h2>
             <>
-            
-                <Modal show={show} onHide={handleClose}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>New Routine</Modal.Title>
-                  </Modal.Header>
-                  <form onSubmit={handleSubmit}>
-                  
-                  <Modal.Body>
-                      <Form.Group controlId="formBasicEmail">
-                        <Form.Control type="text" name="name" placeholder="Enter routine name" onChange={handleChange} />
-                      </Form.Group>
-                      <Form.Group controlId="formBasicPassword">
-                        <Form.Control type="text" name="goal" placeholder="Enter routine goal" onChange={handleChange} />
-                      </Form.Group>                       
-                  </Modal.Body>  
-
-                  <Modal.Footer>
-                     <Button variant="secondary" type="submit" onClick={() =>{setFormButton('close');handleClose()}}>
-                      Close
-                    </Button>
-                    <Button variant="primary" type="submit" onClick={() =>{setFormButton('create');handleClose()}}>
-                      Create
-                    </Button> 
-                  </Modal.Footer>
-                  </form>
-                </Modal>
-                
+                <ModalF show={show}formButton={formButton} handleClose={handleClose} handleShow={handleShow}  handleChange={handleChange} handleSubmit={handleSubmit} setFormButton={setFormButton}/>   
             </>
             <p>There is a total of {userRoutines.length} routines.</p>
             
             {
                 userRoutines.map(({id, name, goal, creatorName, activities}) =>(
                     
-                <div key={id} className="post">
-                    <h3>Routine Name: {name}</h3>
+                <div key={id } className="post">
+                    <h3>Routine Name: {name} &nbsp;|&nbsp; <Button variant="primary" onClick={() =>{setFormButton('update'); handleShow(); findRoutineCrud(id)}}>Update</Button>
+                    &nbsp;|&nbsp; <Button variant="primary" onClick={() =>{setFormButton('delete'); findRoutineCrud(id);}}>Delete</Button></h3>
                     <p>Routine Goal: {goal}</p>
                     <p>Creator Name: {creatorName}</p>
                     {

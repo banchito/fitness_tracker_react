@@ -4,11 +4,12 @@ import {registerUser, loginUser} from '../api';
 import { NavLink } from 'react-router-dom';
 import {storeCurrentUser, clearCurrentUser} from '../auth'
 
-const Header = ({currentUser, setCurrentUser}) => {
+const Header = ({currentUser, setCurrentUser, setApiMessage}) => {
     
     const [username, setUsername]  = useState('');
     const [password, setPassword]  = useState('');
-    const [apiMessage, setApiMessage] = useState('');
+    
+    
     const [formButton, setFormButton] = useState();
 
     const handleSubmit = async(event) =>{
@@ -17,15 +18,20 @@ const Header = ({currentUser, setCurrentUser}) => {
         
         
         if(formButton === 'logout') return handleUserLogout()
+
         if (formButton === "login" ){
-            
-            const result = await loginUser(username, password)
-            hanldeLoginAndRegister(result)  
+            try{
+                const result = await loginUser(username, password)
+                hanldeLoginAndRegister(result)     
+            }catch(error){
+                console.log(error);
+            }   
         }
+
         if (formButton === "register" ){
            try{
-                const result = await registerUser(username, password)
-                hanldeLoginAndRegister(result)  
+            const result = await registerUser(username, password)
+            hanldeLoginAndRegister(result)  
            }catch(error){
              console.log(error);
            }   
@@ -61,7 +67,6 @@ return (
               </>
             : <>
                 <input placeholder="username" value={username} onChange={(e)=>{setUsername(e.target.value)}}></input>
-                <br/>
                 <input placeholder="password" type="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}></input>
                 <button name="register" type="submit" value="register" onClick={() =>{setFormButton('register')}}>REGISTER</button>
                 <button name="login" type="submit" value="login" onClick={() =>{setFormButton('login')}}>LOG IN</button>

@@ -2,7 +2,7 @@ import axios from "axios";
 const BASE_URL = "https://fitnesstrac-kr.herokuapp.com/api"
 //https://fitnesstrac-kr.herokuapp.com/api
 //https://glacial-bayou-64478.herokuapp.com/api
-
+//https://calm-lowlands-92047.herokuapp.com/api
 //USERS
 // Register a new User
 export const registerUser = async (username, password) => {
@@ -39,7 +39,6 @@ export const loginUser = async (username, password) => {
             })
         });
         const data = await response.json();
-
         localStorage.setItem('token', JSON.stringify(data.token));
         return data
     }catch(error){
@@ -180,8 +179,7 @@ export const getAllPublicRoutinesFrontEnd = async () => {
 export const createRoutineFrontEnd = async({name, goal, isPublic}) => {
     try{
         const token = JSON.parse(localStorage.getItem("token"));
-        console.log("token:", token)
-        // if(!token) return
+        
         const response = await fetch(`${BASE_URL}/routines`, {
                 method: "POST",
                 headers: {
